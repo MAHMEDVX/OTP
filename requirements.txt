@@ -1,0 +1,13 @@
+pip install os
+pip install re
+pip install time
+pip install request
+pip install json
+pip install quote_plus
+pip install Path
+pip install sqlite3
+pip install telebot
+pip install types
+pip install threading
+pip install random
+pip install itertools
