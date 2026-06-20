@@ -11,8 +11,7 @@ def run():
     app.run(host='0.0.0.0', port=10000)
 
 def keep_alive():
-    t = Thread(target=run)
-    t.start()
+    Thread(target=run).start()
 
 import time
 import requests
@@ -1969,6 +1968,7 @@ time.sleep(REFRESH_INTERVAL)
 # ▶️ تشغيل البوت مع Flask
 # ================
 if __name__ == "__main__":
-    keep_alive()  # شغل Flask
-    print("Starting bot...")
+    keep_alive()
+    print("Bot is starting...")
+    bot.remove_webhook()
     bot.polling(none_stop=True)
