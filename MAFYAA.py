@@ -1,3 +1,18 @@
+from flask import Flask
+from threading import Thread
+
+app = Flask('')
+
+@app.route('/')
+def home():
+    return "Bot is alive!"
+
+def run():
+    app.run(host='0.0.0.0', port=10000)
+
+def keep_alive():
+    t = Thread(target=run)
+    t.start()
 
 import time
 import requests
@@ -1943,20 +1958,17 @@ def main_loop():
         except Exception as e:
             consecutive_errors[dash["name"]] += 1
             print(f"[{dash['name']}] ❌ خطأ ({consecutive_errors[dash['name']]}/{max_consecutive_errors}): {e}")
-            if consecutive_errors[dash["name"]] >= max_consecutive_errors:
-                print(f"[{dash['name']}] ⛔ إيقاف مؤقت للوحة بعد {max_consecutive_errors} أخطاء")
-                time.sleep(30)
-                consecutive_errors[dash["name"]] = 0
+            if consecutive_errors[dashboard['name']] >= max_consecutive_errors:
+    print(f"{dashboard['name']} = {max_consecutive_errors}")
+    time.sleep(30)
+    consecutive_errors[dashboard['name']] = 0
 
-        time.sleep(REFRESH_INTERVAL)
+time.sleep(REFRESH_INTERVAL)
 
-# ======================
-# ▶️ تشغيل البوت التفاعلي في خيط منفصل
-# ======================
-def run_bot():
-    print("[*] Starting private bot...")
-    bot.polling(none_stop=True)
-
+# ================
+# ▶️ تشغيل البوت مع Flask
+# ================
 if __name__ == "__main__":
-    threading.Thread(target=run_bot, daemon=True).start()
-    main_loop()
+    keep_alive()  # شغل Flask
+    print("Starting bot...")
+    bot.polling(none_stop=True)
