@@ -1958,12 +1958,9 @@ def main_loop():
             consecutive_errors[dash["name"]] += 1
             print(f"[{dash['name']}] ❌ خطأ ({consecutive_errors[dash['name']]}/{max_consecutive_errors}): {e}")
             if consecutive_errors[dashboard['name']] >= max_consecutive_errors:
-    print(f"{dashboard['name']} = {max_consecutive_errors}")
+    print(f"{dashboard['name']} = {max_consecutive_errors}")  # ← فيه مسافة (4 مسافات أو Tab)
     time.sleep(30)
     consecutive_errors[dashboard['name']] = 0
-
-time.sleep(REFRESH_INTERVAL)
-
 # ================
 # ▶️ تشغيل البوت مع Flask
 # ================
