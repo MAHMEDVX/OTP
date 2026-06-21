@@ -1,4 +1,2 @@
-telebot==0.0.5
-pyTelegramBotAPI==4.16.1
+pyTelegramBotAPI==4.21.0
 requests==2.32.3
-firebase-admin==6.5.0
