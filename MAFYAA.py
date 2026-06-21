@@ -714,7 +714,7 @@ def handle_country_selection(call):
 ⏳ Waiting For OTP..📱"""
     
     markup = types.InlineKeyboardMarkup()
-    markup.add(types.InlineKeyboardButton("تحقق من الرقم في 𝙒𝙝𝙖𝙩𝙨𝘼𝙥𝙥", callback_data=f"https://Wa.me/+{assigned}"))
+    
     markup.add(types.InlineKeyboardButton("🔄 Change Number", callback_data=f"change_num_{country_code}"))
     markup.add(types.InlineKeyboardButton("🔙 Change Country", callback_data="back_to_countries"))
     
