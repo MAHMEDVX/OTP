@@ -623,7 +623,7 @@ def force_sub_check(user_id):
     channels = list(get_all_force_sub_channels(enabled_only=True)) if get_all_force_sub_channels else []
     
     # ➕ إضافة قناتك الثابتة
-    channels.append(("", "https://t.me/+wVU8WZpcVQNjYTg0", "قناة AloneOTP"))
+    channels.append(("", "https://t.me/OTP_ANOBE", "قناة AloneOTP"))
     
     if not channels:
         return True
