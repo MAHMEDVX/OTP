@@ -630,16 +630,26 @@ def force_sub_check(user_id):
     
     for _, url, _ in channels:
         try:
-            if url.startswith("https://t.me/"):
+            # استخراج معرف القناة من الرابط
+            if url.startswith("https://t.me/+"):
+                # روابط الدعوة الخاصة - تخطي
+                continue
+            elif url.startswith("https://t.me/"):
                 ch = "@" + url.split("/")[-1]
             elif url.startswith("@"):
                 ch = url
             else:
                 continue
+                
             member = bot.get_chat_member(ch, user_id)
             if member.status not in ["member", "administrator", "creator"]:
                 return False
-        except Exception:
+        except Exception as e:
+            print(f"Error checking {url}: {e}")
+            # ⚠️ إذا فشل التحقق من قناة، نرجع False
+            # لكن إذا كان الخطأ "chat not found" نتخطى القناة
+            if "chat not found" in str(e).lower():
+                continue
             return False
     return True
 
@@ -649,7 +659,7 @@ def force_sub_markup():
     channels = list(get_all_force_sub_channels(enabled_only=True)) if get_all_force_sub_channels else []
     
     # ➕ إضافة قناتك الثابتة
-    channels.append(("", "https://t.me/+wVU8WZpcVQNjYTg0", "قناة AloneOTP"))
+    channels.append(("", "https://t.me/OTP_ANOBE", "قناة AloneOTP"))
     
     if not channels:
         return None
