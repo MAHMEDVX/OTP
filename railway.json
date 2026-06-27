@@ -1,0 +1,16 @@
+{
+  "build": {
+    "builder": "NIXPACKS"
+  },
+  "deploy": {
+    "startCommand": "python MAFYAA.py",
+    "healthcheckPath": "/",
+    "healthcheckTimeout": 100
+  },
+  "variables": {
+    "SMTP_EMAIL": "b0212a001@smtp-brevo.com",
+    "SMTP_APP_PASSWORD": "JICOLMKvg7DyZ1xj",
+    "SMTP_HOST": "smtp-relay.brevo.com",
+    "SMTP_PORT": "587"
+  }
+}
