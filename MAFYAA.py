@@ -106,6 +106,11 @@ def send_email_via_smtp(to_email, subject, body):
     """إرسال إيميل باستخدام البريد الحالي"""
     try:
         email, password = get_current_email()
+        
+        # تشخيص المشكلة
+        print(f"DEBUG: Email found: {email is not None}")
+        print(f"DEBUG: Password found: {password is not None}")
+        
         if not email or not password:
             return False, "No emails configured"
         
@@ -115,7 +120,9 @@ def send_email_via_smtp(to_email, subject, body):
         msg['from'] = email
         msg.attach(MIMEText(body, 'html'))
         
+        # جرب الاتصال بـ Gmail مع طباعة الخطأ
         server = smtplib.SMTP("smtp.gmail.com", 587, timeout=15)
+        server.set_debuglevel(1)  # هذا هيساعد في تشخيص المشكلة
         server.starttls()
         server.login(email, password)
         server.send_message(msg)
@@ -123,8 +130,14 @@ def send_email_via_smtp(to_email, subject, body):
         
         return True, "Sent successfully"
         
+    except smtplib.SMTPAuthenticationError as e:
+        error_msg = f"Auth Error: {str(e)[:100]}"
+        print(error_msg)
+        return False, error_msg
     except Exception as e:
-        return False, str(e)
+        error_msg = f"Error: {str(e)[:100]}"
+        print(error_msg)
+        return False, error_msg
 
 # ======================
 # 🚫 إخفاء جميع مخرجات الطرفية (اختياري)
