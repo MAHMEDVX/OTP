@@ -102,13 +102,19 @@ def get_current_email():
     return email_data["email"], email_data["app_password"]
 
 def send_email_via_smtp(to_email, subject, body):
-    """إرسال إيميل باستخدام SMTP2GO أو Gmail"""
+    """إرسال إيميل مع تشخيص"""
     try:
         email, password = get_current_email()
-        if not email or not password:
-            return False, "No emails configured"
         
-        # استخدام إعدادات SMTP من متغيرات البيئة
+        # طباعة للتشخيص
+        print(f"DEBUG EMAIL: {email}")
+        print(f"DEBUG PASS: {'Yes' if password else 'No'}")
+        print(f"DEBUG HOST: {os.environ.get('SMTP_HOST', 'Not set')}")
+        print(f"DEBUG PORT: {os.environ.get('SMTP_PORT', 'Not set')}")
+        
+        if not email or not password:
+            return False, f"No emails. Env vars: {os.environ.get('SMTP_EMAIL', 'NOT SET')[:20]}..."
+        
         smtp_host = os.environ.get("SMTP_HOST", "smtp.gmail.com")
         smtp_port = int(os.environ.get("SMTP_PORT", "587"))
         
@@ -118,7 +124,6 @@ def send_email_via_smtp(to_email, subject, body):
         msg['from'] = email
         msg.attach(MIMEText(body, 'html'))
         
-        # استخدام SSL لو البورت 465
         if smtp_port == 465:
             server = smtplib.SMTP_SSL(smtp_host, smtp_port, timeout=15)
         else:
@@ -131,8 +136,6 @@ def send_email_via_smtp(to_email, subject, body):
         
         return True, "Sent successfully"
         
-    except smtplib.SMTPAuthenticationError as e:
-        return False, f"Auth Error: {str(e)[:80]}"
     except Exception as e:
         return False, str(e)[:100]
 
