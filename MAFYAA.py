@@ -22,39 +22,59 @@ from email.mime.multipart import MIMEMultipart
 # ======================
 # 📁 ملف إدارة البريدات
 # ======================
-EMAILS_FILE_URL = "https://raw.githubusercontent.com/MAHMEDVX/Json/refs/heads/main/emails.json"
-LOCAL_EMAILS_FILE = "emails.json"
-
 def load_emails():
-    """تحميل البريدات من الرابط أو الملف المحلي"""
-    # محاولة التحميل من الملف المحلي أولاً
-    if os.path.exists(LOCAL_EMAILS_FILE):
+    """تحميل البريدات من Environment Variables أو الملفات"""
+    
+    # ✅ أولاً: التحقق من Environment Variables (الأفضل لـ Railway)
+    env_email = os.environ.get("SMTP_EMAIL")
+    env_password = os.environ.get("SMTP_APP_PASSWORD")
+    
+    if env_email and env_password:
+        data = {
+            "emails": [
+                {
+                    "id": 1,
+                    "email": env_email,
+                    "app_password": env_password
+                }
+            ],
+            "current_index": 0
+        }
+        # حفظ نسخة محلية احتياطية
         try:
-            with open(LOCAL_EMAILS_FILE, 'r', encoding='utf-8') as f:
+            with open("emails.json", 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except:
+            pass
+        return data
+    
+    # ثانياً: الملف المحلي
+    if os.path.exists("emails.json"):
+        try:
+            with open("emails.json", 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 if data.get("emails") and len(data["emails"]) > 0:
                     return data
         except:
             pass
     
-    # إذا لم يوجد ملف محلي أو كان فارغاً، حاول التحميل من الرابط
+    # ثالثاً: رابط GitHub (احتياطي)
     try:
-        response = requests.get(EMAILS_FILE_URL, timeout=30)
+        response = requests.get("https://raw.githubusercontent.com/MAHMEDVX/Json/refs/heads/main/emails.json", timeout=30)
         if response.status_code == 200:
             data = response.json()
             if data.get("emails") and len(data["emails"]) > 0:
-                save_emails_local(data)
+                try:
+                    with open("emails.json", 'w', encoding='utf-8') as f:
+                        json.dump(data, f, ensure_ascii=False, indent=2)
+                except:
+                    pass
                 return data
     except Exception as e:
         print(f"Failed to download emails: {e}")
     
-    # إنشاء بريدات افتراضية احتياطية
-    fallback_emails = {
-        "emails": [],
-        "current_index": 0
-    }
-    save_emails_local(fallback_emails)
-    return fallback_emails
+    # أخيراً: قائمة فارغة
+    return {"emails": [], "current_index": 0}
 def save_emails_local(data):
     """حفظ البريدات محلياً"""
     try:
